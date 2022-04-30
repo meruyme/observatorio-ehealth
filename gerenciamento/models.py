@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.db import models
+from localflavor.br.models import BRCPFField
 
 from gerenciamento.choices import TipoUsuario
 
@@ -39,3 +41,29 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
+
+
+class Coordenador(models.Model):
+    nome = models.CharField(max_length=255)
+    cpf = BRCPFField(verbose_name='CPF', unique=True)
+    data_nascimento = models.DateField()
+    telefone = models.CharField(max_length=13, null=True, blank=True)
+    ativo = models.BooleanField(default=True)
+    auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coordenador')
+
+    def __str__(self):
+        return f'{self.nome} - {self.cpf}'
+
+
+class Aluno(models.Model):
+    nome = models.CharField(max_length=255)
+    matricula = models.CharField(max_length=13, unique=True)
+    cpf = BRCPFField(verbose_name='CPF', unique=True)
+    data_nascimento = models.DateField()
+    telefone = models.CharField(max_length=13, null=True, blank=True)
+    ativo = models.BooleanField(default=True)
+    auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='aluno')
+    coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos')
+
+    def __str__(self):
+        return f'{self.nome} - {self.cpf}'
