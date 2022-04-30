@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import models
 from localflavor.br.models import BRCPFField
 
-from gerenciamento.choices import TipoUsuario
+from gerenciamento.choices import TipoUsuario, TipoLocal, TipoOrganizacao
 
 
 class UserManager(BaseUserManager):
@@ -67,3 +67,20 @@ class Aluno(models.Model):
 
     def __str__(self):
         return f'{self.nome} - {self.cpf}'
+
+
+class Pais(models.Model):
+    nome = models.CharField(max_length=500)
+    sigla = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.nome
+
+
+class Hospital(models.Model):
+    nome = models.CharField(max_length=500)
+    pais = models.ForeignKey(Pais, on_delete=models.PROTECT, related_name='hospitais')
+    estado = models.CharField(max_length=300)
+    cidade = models.CharField(max_length=300)
+    tipo_local = models.CharField(max_length=2, choices=TipoLocal.CHOICES)
+    tipo_organizacao = models.CharField(max_length=2, choices=TipoOrganizacao.CHOICES)
