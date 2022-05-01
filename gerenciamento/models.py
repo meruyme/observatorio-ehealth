@@ -64,6 +64,7 @@ class Aluno(models.Model):
     ativo = models.BooleanField(default=True)
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='aluno')
     coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos')
+    pesquisas = models.ManyToManyField('pesquisa.Pesquisa', through='pesquisa.AlunoPesquisa')
 
     def __str__(self):
         return f'{self.nome} - {self.cpf}'
