@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base-home.html" %}
 {% load crispy_forms_filters %}
 
-{% block content %}
+{% block content-home %}
 
     <div class="form-cadastro">
 
@@ -11,7 +11,9 @@
             <form method="post" autocomplete="off" novalidate>
                 {% csrf_token %}
                 {{ form|crispy }}
-
+                <div class="d-flex justify-content-end">
+                    <button class="btn">Cadastrar</button>
+                </div>
             </form>
 
     </div>

@@ -14,7 +14,7 @@
 }
 
 .nav {
-    width: 25%;
+    width: 20%;
     height: 100vh;
     position: sticky;
 }
@@ -40,6 +40,7 @@
     padding: 20px;
     background-color: #D3E7F7;
     background-size: cover;
+    width: 100%;
 }
 
 .form-consultar {
@@ -149,10 +150,15 @@
     text-align: center
 }
 
-.btn {
-    background-color: #66B2F8;
-    border-color: #66B2F8;
+.btn-login {
+    background-color: #66B2F8 !important;
+    border-color: #66B2F8 !important;
+}
 
+.btn{
+    background-color: #53507A;
+    border-color: #53507A;
+    color: white;
 }
 
 li {
