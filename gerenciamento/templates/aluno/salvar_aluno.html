@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+
+    <div class="form-cadastro">
+
+
+            <h1 class="title">Cadastro de Aluno</h1>
+
+            <form method="post" autocomplete="off" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+
+            </form>
+
+    </div>
+
+{% endblock %}
