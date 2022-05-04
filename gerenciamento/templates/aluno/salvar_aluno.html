@@ -3,19 +3,14 @@
 
 {% block content-home %}
 
-    <div class="form-cadastro">
+    <h1 class="title"> {% if aluno_id %}Editar{% else %}Cadastrar{% endif %} Aluno</h1>
 
-
-            <h1 class="title">Cadastro de Aluno</h1>
-
-            <form method="post" autocomplete="off" novalidate>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="d-flex justify-content-end">
-                    <button class="btn">Cadastrar</button>
-                </div>
-            </form>
-
-    </div>
+    <form method="post" autocomplete="off" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex justify-content-end">
+            <button class="btn">{% if aluno_id %}Editar{% else %}Cadastrar{% endif %}</button>
+        </div>
+    </form>
 
 {% endblock %}

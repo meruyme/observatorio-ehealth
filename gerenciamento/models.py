@@ -8,14 +8,15 @@ from gerenciamento.choices import TipoUsuario, TipoLocal, TipoOrganizacao
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password):
-        user = self.model(email=self.normalize_email(email))
+    def create_user(self, email, password, tipo_usuario=None):
+        user = self.model(email=self.normalize_email(email),
+                          tipo_usuario=tipo_usuario)
         user.password = make_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email, password=None):
-        user = self.create_user(email=email, password=password)
+    def create_superuser(self, email, password=None, tipo_usuario=None):
+        user = self.create_user(email=email, password=password, tipo_usuario=tipo_usuario)
         user.is_staff = True
         user.is_active = True
         user.save()
@@ -58,7 +59,7 @@ class Coordenador(models.Model):
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coordenador')
 
     def __str__(self):
-        return f'{self.nome} - {self.cpf}'
+        return self.nome
 
 
 class Aluno(models.Model):
@@ -74,7 +75,7 @@ class Aluno(models.Model):
     pesquisas = models.ManyToManyField('pesquisa.Pesquisa', through='pesquisa.AlunoPesquisa')
 
     def __str__(self):
-        return f'{self.nome} - {self.cpf}'
+        return self.nome
 
 
 class Pais(models.Model):

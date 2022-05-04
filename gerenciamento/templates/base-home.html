@@ -4,6 +4,25 @@
     <div class="home">
 
        {% include "nav.html" %}
-        {% block content-home %}{% endblock %}
+        <div class="form-cadastro">
+            <div class="messages">
+                    {% for message in messages %}
+                        {% if message.tags == "info" %}
+                            <div class="alert alert-primary" id="message_container">
+                                {{ message }}
+                            </div>
+                        {% elif message.tags == "error" %}
+                            <div class="alert alert-danger" id="message_container">
+                                {{ message }}
+                            </div>
+                        {% elif message.tags == "success" %}
+                            <div class="alert alert-success" id="message_container">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+            </div>
+            {% block content-home %}{% endblock %}
+        </div>
     </div>
 {% endblock %}
