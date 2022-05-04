@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+
+    <div class="form-center">
+
+        <div class="form-registration">
+
+            <h1 class="title">Entrar</h1>
+
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">Email ou senha incorretos!</div>
+            {% endif %}
+
+            <form method="post" autocomplete="off" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                    {{ form.username|as_crispy_field }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.password|as_crispy_field }}
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+
+                <br>
+                <p class="text-bottom">Ou <a href=''>Entre como visitante</a></p>
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}

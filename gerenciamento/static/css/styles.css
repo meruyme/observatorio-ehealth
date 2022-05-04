@@ -1,0 +1,171 @@
+.asteriskField {
+    display: none;
+}
+
+.title {
+    text-align: center;
+    color: #53507A;
+}
+
+.home {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.nav {
+    width: 25%;
+    height: 100vh;
+    position: sticky;
+}
+
+.form-center {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: ghostwhite;
+    background-image: url('../images/fundo-login.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.form-consultar {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    padding: 20px;
+    background-color: ghostwhite;
+}
+
+.container-agend {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    padding-right: 50px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container-transparencia {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-box {
+    width: 35%;
+    height: min-content;
+    text-align: left;
+    box-shadow: 0px 3px 6px #0000001A;
+    border: 1px solid #E3E3E3;
+    border-radius: 6px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(7.0px);
+    -webkit-backdrop-filter: blur(7.0px);
+}
+
+.form-registration {
+    width: 35%;
+    left: 15%;
+    height: min-content;
+    text-align: left;
+    box-shadow: 0px 3px 6px #0000001A;
+    border: 1px solid #E3E3E3;
+    border-radius: 6px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(7.0px);
+    -webkit-backdrop-filter: blur(7.0px);
+}
+
+.graph {
+    width: 40%;
+    text-align: left;
+    box-shadow: 0px 3px 6px #0000001A;
+    border: 1px solid #E3E3E3;
+    border-radius: 6px;
+    padding: 25px;
+    background-color: white;
+}
+
+.voucher {
+    width: 50%;
+    text-align: left;
+    box-shadow: 0px 3px 6px #0000001A;
+    border: 1px solid #E3E3E3;
+    border-radius: 6px;
+    padding: 25px;
+}
+
+.voucher-center {
+    min-height: 100vh;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.my-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-resul {
+    width: 50%;
+    text-align: left;
+    box-shadow: 0px 3px 6px #0000001A;
+    border: 1px solid #E3E3E3;
+    border-radius: 6px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(7.0px);
+    -webkit-backdrop-filter: blur(7.0px);
+    height: min-content;
+}
+
+
+.text-bottom {
+    padding-top: 15px;
+    text-align: center
+}
+
+.btn {
+    background-color: #66B2F8;
+    border-color: #66B2F8;
+
+}
+
+li {
+    list-style: none
+}
+
+.btn:hover, .btn:focus, .btn:active {
+    background-color: #53507A;
+    border-color: #53507A;
+}
+
+.messages {
+    margin: 10px;
+}
+
+a:link, a:visited {
+    color: #53507A;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    color: #53507A;
+    background-color: transparent;
+    text-decoration: underline;
+}
