@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect
 
-from forms import SalvarAlunoForm, SalvarHospitalForm, SalvarCoordenadorForm
+from forms import SalvarAlunoForm, SalvarHospitalForm, SalvarCoordenadorForm, RedefinirSenhaForm
 from django.contrib.auth import get_user_model
 
 from gerenciamento.choices import TipoUsuario
@@ -17,12 +17,23 @@ def home(request):
     return render(request, 'home.html', locals())
 
 
-@login_required()
+@login_required
 @transaction.atomic
 def perfil(request):
-
-
-    return render(request, 'aluno/salvar_aluno.html', locals())
+    user = request.user
+    if user.is_coordenador:
+        form = SalvarCoordenadorForm(request.POST or None, instance=user.pessoa)
+    else:
+        form = SalvarAlunoForm(request.POST or None, instance=user.pessoa)
+    form_senha = RedefinirSenhaForm(user, request.POST or None, request=request)
+    if request.POST:
+        if form.is_valid() and form_senha.is_valid():
+            pessoa = form.save()
+            user.email = form.cleaned_data['email']
+            user.save()
+            if form_senha.cleaned_data.get('senha'):
+                form_senha.save()
+    return render(request, 'perfil.html', locals())
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)

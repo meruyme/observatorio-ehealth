@@ -39,15 +39,18 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    @property
     def pessoa(self):
         if self.tipo_usuario == TipoUsuario.COORDENADOR:
             return self.coordenador
         else:
             return self.aluno
 
+    @property
     def is_coordenador(self):
         return self.tipo_usuario == TipoUsuario.COORDENADOR
 
+    @property
     def is_aluno(self):
         return self.tipo_usuario == TipoUsuario.ALUNO
 

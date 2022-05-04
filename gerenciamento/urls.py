@@ -9,6 +9,7 @@ urlpatterns = [
     path('entrar/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name="login", ),
     path('sair/', auth_views.LogoutView.as_view(), name="logout"),
     path('', views.home, name='home'),
+    path('perfil/', views.perfil, name='perfil'),
     path('aluno/salvar/', views.salvar_aluno, name='cadastrar_aluno'),
     path('aluno/salvar/<int:aluno_id>/', views.salvar_aluno, name='editar_aluno'),
     path('coordenador/salvar/', views.salvar_coordenador, name='cadastrar_coordenador'),

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
 
 from gerenciamento.models import Aluno, Hospital, Coordenador
 
@@ -66,6 +66,40 @@ class SalvarCoordenadorForm(forms.ModelForm):
         super(SalvarCoordenadorForm, self).__init__(*args, **kwargs)
         if coordenador:
             self.fields['email'].initial = coordenador.auth_user.email
+
+
+class RedefinirSenhaForm(forms.Form):
+    senha = forms.CharField(label='Nova senha', widget=forms.PasswordInput(), min_length=6,
+                            max_length=20, help_text='A nova senha deve ter entre 6 e 20 dígitos', required=False)
+    confirmacao = forms.CharField(widget=forms.PasswordInput(), label='Confirmação de senha',
+                                  min_length=6, max_length=20, required=False)
+
+    def __init__(self, user, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(RedefinirSenhaForm, self).__init__(*args, **kwargs)
+        self.usuario = user
+
+    def clean(self):
+        senha = self.cleaned_data.get('senha')
+        confirmacao = self.cleaned_data.get('confirmacao')
+
+        if senha and not confirmacao:
+            self.add_error('confirmacao', "Este campo é obrigatório ao redefinir a senha.")
+        if not senha and confirmacao:
+            self.add_error('senha', "Este campo é obrigatório ao redefinir a senha.")
+        if senha and confirmacao:
+            if senha != confirmacao:
+                self.add_error('confirmacao', "A senha e a confirmação precisam ser iguais.")
+                self.add_error('senha', "A senha e a confirmação precisam ser iguais.")
+
+        return self.cleaned_data
+
+    def save(self):
+        self.usuario.set_password(self.cleaned_data['senha'])
+        self.usuario.save()
+        if self.request:
+            update_session_auth_hash(self.request, self.usuario)
+        return self.usuario
 
 
 class SalvarHospitalForm(forms.ModelForm):
