@@ -3,18 +3,55 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect
 
-from forms import SalvarAlunoForm, SalvarHospitalForm
+from forms import SalvarAlunoForm, SalvarHospitalForm, SalvarCoordenadorForm
 from django.contrib.auth import get_user_model
 
 from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
-from gerenciamento.models import Aluno, Hospital
+from gerenciamento.models import Aluno, Hospital, Coordenador
 
 User = get_user_model()
 
 
 def home(request):
     return render(request, 'home.html', locals())
+
+
+@login_required()
+@transaction.atomic
+def perfil(request):
+
+
+    return render(request, 'aluno/salvar_aluno.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
+def salvar_coordenador(request, coordenador_id=None):
+    if coordenador_id:
+        try:
+            coordenador = Coordenador.objects.get(pk=coordenador_id)
+            form = SalvarCoordenadorForm(request.POST or None, instance=coordenador)
+        except:
+            messages.error(request, 'Coordenador não existe.')
+            return redirect('gerenciamento:home')
+    else:
+        form = SalvarCoordenadorForm(request.POST or None)
+    if request.POST:
+        if form.is_valid():
+            coordenador = form.save(commit=False)
+            if coordenador_id:
+                user = coordenador.auth_user
+                user.email = form.cleaned_data['email']
+                user.save()
+            else:
+                user = User.objects.create_user(email=form.cleaned_data['email'],
+                                                password=form.cleaned_data['cpf'],
+                                                tipo_usuario=TipoUsuario.COORDENADOR)
+                coordenador.auth_user = user
+            coordenador.save()
+
+    return render(request, 'coordenador/salvar_coordenador.html', locals())
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)
