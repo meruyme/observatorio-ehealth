@@ -45,6 +45,12 @@ class User(AbstractBaseUser):
         else:
             return self.aluno
 
+    def is_coordenador(self):
+        return self.tipo_usuario == TipoUsuario.COORDENADOR
+
+    def is_aluno(self):
+        return self.tipo_usuario == TipoUsuario.ALUNO
+
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"

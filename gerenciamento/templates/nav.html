@@ -55,7 +55,7 @@
         {% else %}
             <li><a href="" class="options">
                 <img src="{% static 'images/icons/perfil.svg' %}"> Perfil</a></li>
-            {% if user.tipo_usuario == '1' %}
+            {% if user.is_coordenador %}
             <li><a href="" class="options">
                 <img src="{% static 'images/icons/gestao.svg' %}"> Gestão</a></li>
             {% endif %}

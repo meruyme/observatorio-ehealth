@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from gerenciamento.models import Aluno
-
+from gerenciamento.models import Aluno, Hospital
 
 User = get_user_model()
 
@@ -36,3 +35,9 @@ class SalvarAlunoForm(forms.ModelForm):
         super(SalvarAlunoForm, self).__init__(*args, **kwargs)
         if aluno:
             self.fields['email'].initial = aluno.auth_user.email
+
+
+class SalvarHospitalForm(forms.ModelForm):
+    class Meta:
+        model = Hospital
+        fields = '__all__'

@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect
 
-from forms import SalvarAlunoForm
+from forms import SalvarAlunoForm, SalvarHospitalForm
 from django.contrib.auth import get_user_model
 
 from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
-from gerenciamento.models import Aluno
+from gerenciamento.models import Aluno, Hospital
 
 User = get_user_model()
 
@@ -45,3 +45,22 @@ def salvar_aluno(request, aluno_id=None):
             aluno.save()
 
     return render(request, 'aluno/salvar_aluno.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
+def salvar_hospital(request, hospital_id=None):
+    if hospital_id:
+        try:
+            hospital = Hospital.objects.get(pk=hospital_id)
+            form = SalvarHospitalForm(request.POST or None, instance=hospital)
+        except:
+            messages.error(request, 'Hospital não existe.')
+            return redirect('gerenciamento:home')
+    else:
+        form = SalvarHospitalForm(request.POST or None)
+    if request.POST:
+        if form.is_valid():
+            hospital = form.save()
+
+    return render(request, 'hospital/salvar_hospital.html', locals())
