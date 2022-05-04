@@ -150,8 +150,8 @@ li {
 }
 
 .btn:hover, .btn:focus, .btn:active {
-    background-color: #53507A;
-    border-color: #53507A;
+    background-color: #88b5df;
+    border-color: #88b5df;
 }
 
 .messages {
@@ -159,13 +159,13 @@ li {
 }
 
 a:link, a:visited {
-    color: #53507A;
+    color: #88b5df;
     background-color: transparent;
     text-decoration: none;
 }
 
 a:hover, a:active {
-    color: #53507A;
+    color: #88b5df;
     background-color: transparent;
     text-decoration: underline;
 }
