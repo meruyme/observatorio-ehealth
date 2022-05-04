@@ -4,9 +4,9 @@ from django.db import models
 class Pesquisa(models.Model):
     titulo = models.CharField(max_length=500)
     coordenador_responsavel = models.ForeignKey('gerenciamento.Coordenador', on_delete=models.PROTECT,
-                                                related_name='pesquisas')
-    data_inicio = models.DateField()
-    data_fim = models.DateField()
+                                                related_name='pesquisas', verbose_name='Coordenador responsável')
+    data_inicio = models.DateField(verbose_name='Data de início')
+    data_fim = models.DateField(verbose_name='Data de fim')
     hospitais = models.ManyToManyField('gerenciamento.Hospital', through='HospitalPesquisa')
 
     def __str__(self):
@@ -14,8 +14,8 @@ class Pesquisa(models.Model):
 
 
 class Pergunta(models.Model):
-    titulo = models.CharField(max_length=700)
-    multipla_escolha = models.BooleanField(default=False)
+    titulo = models.CharField(max_length=700, verbose_name='Título')
+    multipla_escolha = models.BooleanField(default=False, verbose_name='Múltipla escolha')
     opcoes = models.JSONField(null=True, blank=True)
 
     def __str__(self):

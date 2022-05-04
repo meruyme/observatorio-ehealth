@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
 class Coordenador(models.Model):
     nome = models.CharField(max_length=255)
     cpf = BRCPFField(verbose_name='CPF', unique=True)
-    data_nascimento = models.DateField()
+    data_nascimento = models.DateField(verbose_name="Data de nascimento")
     telefone = models.CharField(max_length=13, null=True, blank=True)
     ativo = models.BooleanField(default=True)
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coordenador')
@@ -57,13 +57,14 @@ class Coordenador(models.Model):
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=255)
-    matricula = models.CharField(max_length=13, unique=True)
+    matricula = models.CharField(verbose_name="Matrícula", max_length=13, unique=True)
     cpf = BRCPFField(verbose_name='CPF', unique=True)
-    data_nascimento = models.DateField()
+    data_nascimento = models.DateField(verbose_name="Data de nascimento")
     telefone = models.CharField(max_length=13, null=True, blank=True)
     ativo = models.BooleanField(default=True)
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='aluno')
-    coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos')
+    coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos',
+                                                verbose_name="Coordenador responsável")
     pesquisas = models.ManyToManyField('pesquisa.Pesquisa', through='pesquisa.AlunoPesquisa')
 
     def __str__(self):
@@ -80,8 +81,9 @@ class Pais(models.Model):
 
 class Hospital(models.Model):
     nome = models.CharField(max_length=500)
-    pais = models.ForeignKey(Pais, on_delete=models.PROTECT, related_name='hospitais')
+    pais = models.ForeignKey(Pais, on_delete=models.PROTECT, related_name='hospitais', verbose_name='País')
     estado = models.CharField(max_length=300)
     cidade = models.CharField(max_length=300)
-    tipo_local = models.CharField(max_length=2, choices=TipoLocal.CHOICES)
-    tipo_organizacao = models.CharField(max_length=2, choices=TipoOrganizacao.CHOICES)
+    tipo_local = models.CharField(max_length=2, choices=TipoLocal.CHOICES, verbose_name='Tipo do local')
+    tipo_organizacao = models.CharField(max_length=2, choices=TipoOrganizacao.CHOICES,
+                                        verbose_name='Tipo de organização')
