@@ -1,0 +1,60 @@
+{% load static %}
+<style>
+    body {
+        margin: 0;
+    }
+
+    .ul-nav {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        background-color: #53507A;
+        height: 100%;
+    }
+
+    li a.options {
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+
+    li a img {
+        margin-right: 5px;
+    }
+
+    li a {
+        display: block;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+    li a.home {
+        padding: 15px 16px;
+        color: white;
+
+        background-color: #272540;
+    }
+
+    li a.options:hover:not(.active) {
+        background-color: #3b3957;
+        color: white;
+        text-decoration: none;
+    }
+
+</style>
+
+<nav class="nav">
+    <ul class="ul-nav">
+        <li><b><a class="home" href={% url 'gerenciamento:home' %}>
+            <img src="{% static 'images/icons/home.svg' %}"> Observatório e-Health</a></b></li>
+        {% if user.is_anonymous %}
+            <li>
+                <a href="{% url 'gerenciamento:login' %}" class="options">
+                    <img src="{% static 'images/icons/logout.svg' %}"> Entrar</a></li>
+        {% else %}
+            <li><a href="{% url 'gerenciamento:logout' %}" class="options">
+                <img src="{% static 'images/icons/logout.svg' %}"> Sair</a></li>
+        {% endif %}
+    </ul>
+
+</nav>

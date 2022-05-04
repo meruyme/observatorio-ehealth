@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="home">
+
+       {% include "nav.html" %}
+        {% block content-home %}{% endblock %}
+    </div>
+{% endblock %}

@@ -38,6 +38,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def pessoa(self):
+        if self.tipo_usuario == TipoUsuario.COORDENADOR:
+            return self.coordenador
+        else:
+            return self.aluno
+
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
