@@ -9,14 +9,17 @@
     <div>
         <button type="button" class="btn btn-primary btn-square-md"
                 onclick="window.location.href = '{% url 'gerenciamento:listar_alunos' %}'">
+            <img class="mb-2" src="{% static 'images/icons/alunos.svg' %}">
             Alunos
         </button>
         <button type="button" class="btn btn-primary btn-square-md ml-2"
                 onclick="window.location.href = '{% url 'gerenciamento:listar_coordenadores' %}'">
+            <img class="mb-2" src="{% static 'images/icons/coordenadores.svg' %}">
             Coordenadores
         </button>
         <button type="button" class="btn btn-primary btn-square-md ml-2"
                 onclick="window.location.href = '{% url 'gerenciamento:listar_hospitais' %}'">
+            <img class="mb-2" src="{% static 'images/icons/hospitais.svg' %}">
             Hospitais
         </button>
     </div>
