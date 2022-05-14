@@ -23,12 +23,12 @@ class Pergunta(models.Model):
 
 
 class PerguntaPesquisa(models.Model):
-    pergunta = models.ForeignKey(Pergunta, on_delete=models.PROTECT, related_name='perguntas_pesquisa')
+    pergunta = models.ForeignKey(Pergunta, on_delete=models.CASCADE, related_name='perguntas_pesquisa')
     pesquisa = models.ForeignKey(Pesquisa, on_delete=models.CASCADE, related_name='perguntas_pesquisa')
 
 
 class HospitalPesquisa(models.Model):
-    hospital = models.ForeignKey('gerenciamento.Hospital', on_delete=models.PROTECT, related_name='hospitais_pesquisa')
+    hospital = models.ForeignKey('gerenciamento.Hospital', on_delete=models.CASCADE, related_name='hospitais_pesquisa')
     pesquisa = models.ForeignKey(Pesquisa, on_delete=models.CASCADE, related_name='hospitais_pesquisa')
 
 
