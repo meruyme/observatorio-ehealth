@@ -162,6 +162,11 @@ label{
     border-color: #66B2F8 !important;
 }
 
+.btn-login:hover, .btn-login:focus, .btn-login:active {
+    background-color: #88b5df !important;
+    border-color: #88b5df !important;
+}
+
 .btn{
     background-color: #53507A;
     border-color: #53507A;
@@ -173,8 +178,8 @@ li {
 }
 
 .btn:hover, .btn:focus, .btn:active {
-    background-color: #88b5df;
-    border-color: #88b5df;
+    background-color: #7c7fa9;
+    border-color: #7c7fa9;
 }
 
 .messages {
