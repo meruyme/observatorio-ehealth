@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'crispy_forms',
+    'bootstrap_pagination',
     'localflavor',
     'drf_yasg',
 

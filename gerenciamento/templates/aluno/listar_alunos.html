@@ -1,0 +1,47 @@
+{% extends "base-home.html" %}
+{% load bootstrap_pagination %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content-home %}
+    <h1 class="title"> Alunos</h1>
+
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Matrícula</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">E-mail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aluno in alunos %}
+              <tr data-href="{% url 'gerenciamento:editar_aluno' aluno.pk %}">
+                  <td>{{ aluno.nome }}</td>
+                  <td>{{ aluno.matricula }}</td>
+                  <td>{{ aluno.telefone|default:'-' }}</td>
+                  <td>{{ aluno.auth_user.email }}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% bootstrap_paginate alunos range=5 show_prev_next="true" show_first_last="true" %}
+            </ul>
+        </nav>
+    </nav>
+
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(() =>{
+            $('*[data-href]').on('click', function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+{% endblock %}
