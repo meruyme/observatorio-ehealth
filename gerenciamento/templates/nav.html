@@ -56,7 +56,7 @@
             <li><a href="{% url 'gerenciamento:perfil' %}" class="options">
                 <img src="{% static 'images/icons/perfil.svg' %}"> Perfil</a></li>
             {% if user.is_coordenador %}
-            <li><a href="" class="options">
+            <li><a href="{% url 'gerenciamento:gestao' %}" class="options">
                 <img src="{% static 'images/icons/gestao.svg' %}"> Gestão</a></li>
             {% endif %}
             <li><a href="" class="options">

@@ -18,6 +18,11 @@ def home(request):
     return render(request, 'home.html', locals())
 
 
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+def gestao(request):
+    return render(request, 'gestao.html', locals())
+
+
 @login_required
 @transaction.atomic
 def perfil(request):

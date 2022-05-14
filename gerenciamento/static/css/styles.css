@@ -139,6 +139,16 @@ label{
     border-color: #66B2F8 !important;
 }
 
+.btn-square-md {
+    width: 150px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    height: 150px !important;
+    text-align: center;
+    padding: 0px;
+    font-size: 17px;
+}
+
 .btn-login:hover, .btn-login:focus, .btn-login:active {
     background-color: #88b5df !important;
     border-color: #88b5df !important;
