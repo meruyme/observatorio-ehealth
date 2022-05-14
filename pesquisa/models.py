@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Pesquisa(models.Model):
-    titulo = models.CharField(max_length=500)
+    titulo = models.CharField(max_length=500, verbose_name='Título')
     coordenador_responsavel = models.ForeignKey('gerenciamento.Coordenador', on_delete=models.PROTECT,
                                                 related_name='pesquisas', verbose_name='Coordenador responsável')
     data_inicio = models.DateField(verbose_name='Data de início')
