@@ -1,0 +1,38 @@
+{% extends "base-home.html" %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content-home %}
+
+        <div class="d-flex justify-content-between">
+            <h1 class="title"> {% if not hospital_id %}Cadastrar{% endif %} Pesquisa</h1>
+            {% if pesquisa_id %}
+                <div class="d-flex align-items-center">
+                    <button id="btn-editar" class="btn mr-1">Editar</button>
+                    {% comment %}
+                    <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
+                    {% endcomment %}
+                </div>
+            {% endif %}
+        </div>
+
+    <form method="post" autocomplete="off" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex justify-content-end">
+            <button id='btn-cadastro' class="btn">{% if pesquisa_id %}Editar{% else %}Cadastrar{% endif %}</button>
+        </div>
+    </form>
+
+{% endblock %}
+{% block javascript %}
+    <script src="{% static 'js/geral.js' %}"></script>
+    <script>
+        let id = '{{ pesquisa_id }}';
+        if(id !== 'None'){
+            $('#btn-cadastro').addClass('d-none');
+            $("input, select").prop('disabled', true);
+        }
+    </script>
+    {{ form.media.js }}
+{% endblock %}

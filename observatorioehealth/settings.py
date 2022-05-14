@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap_pagination',
     'localflavor',
     'drf_yasg',
+    'django_select2',
 
     'gerenciamento',
     'pesquisa'

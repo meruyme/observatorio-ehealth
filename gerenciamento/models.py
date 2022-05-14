@@ -103,3 +103,6 @@ class Hospital(models.Model):
     tipo_local = models.CharField(max_length=2, choices=TipoLocal.CHOICES, verbose_name='Tipo do local')
     tipo_organizacao = models.CharField(max_length=2, choices=TipoOrganizacao.CHOICES,
                                         verbose_name='Tipo de organização')
+
+    def __str__(self):
+        return f"{self.nome} - {self.pais}"

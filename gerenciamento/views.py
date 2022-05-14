@@ -164,7 +164,7 @@ def salvar_hospital(request, hospital_id=None):
             form = SalvarHospitalForm(request.POST or None, instance=hospital)
         except:
             messages.error(request, 'Hospital não existe.')
-            return redirect('gerenciamento:home')
+            return redirect('gerenciamento:listar_hospitais')
     else:
         form = SalvarHospitalForm(request.POST or None)
     if request.POST:
