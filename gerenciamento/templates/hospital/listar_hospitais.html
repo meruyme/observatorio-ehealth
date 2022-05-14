@@ -5,9 +5,9 @@
 
 {% block content-home %}
     <div class="d-flex justify-content-between">
-        <h1 class="title"> Alunos</h1>
+        <h1 class="title"> Hospitais</h1>
             <div class="d-flex align-items-center">
-                <button class="btn" onclick="window.location.href = '{% url 'gerenciamento:cadastrar_aluno' %}'">Novo</button>
+                <button class="btn" onclick="window.location.href = '{% url 'gerenciamento:cadastrar_hospital' %}'">Novo</button>
             </div>
     </div>
 
@@ -15,18 +15,18 @@
         <thead>
           <tr>
             <th scope="col">Nome</th>
-            <th scope="col">Matrícula</th>
-            <th scope="col">Telefone</th>
-            <th scope="col">E-mail</th>
+            <th scope="col">País</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Cidade</th>
           </tr>
         </thead>
         <tbody>
-          {% for aluno in alunos %}
-              <tr data-href="{% url 'gerenciamento:editar_aluno' aluno.pk %}">
-                  <td>{{ aluno.nome }}</td>
-                  <td>{{ aluno.matricula }}</td>
-                  <td>{{ aluno.telefone|default:'-' }}</td>
-                  <td>{{ aluno.auth_user.email }}</td>
+          {% for hospital in hospitais %}
+              <tr data-href="{% url 'gerenciamento:editar_hospital' hospital.pk %}">
+                  <td>{{ hospital.nome }}</td>
+                  <td>{{ hospital.pais }}</td>
+                  <td>{{ hospital.estado }}</td>
+                  <td>{{ hospital.cidade }}</td>
               </tr>
           {% endfor %}
         </tbody>
@@ -35,7 +35,7 @@
     <nav class="d-flex justify-content-center" aria-label="Page navigation">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                {% bootstrap_paginate alunos range=5 show_prev_next="true" show_first_last="true" %}
+                {% bootstrap_paginate hospitais range=5 show_prev_next="true" show_first_last="true" %}
             </ul>
         </nav>
     </nav>

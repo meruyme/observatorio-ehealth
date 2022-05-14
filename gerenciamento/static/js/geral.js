@@ -13,7 +13,6 @@ function restore() {
 }
 
 $(document).ready(() => {
-    $("input, select").prop('disabled', true);
 
     $('form').find(':input').each(function(i, elem) {
         let input = $(elem);

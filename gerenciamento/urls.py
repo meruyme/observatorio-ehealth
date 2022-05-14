@@ -18,6 +18,8 @@ urlpatterns = [
     path('coordenador/salvar/', views.salvar_coordenador, name='cadastrar_coordenador'),
     path('coordenador/salvar/<int:coordenador_id>/', views.salvar_coordenador, name='editar_coordenador'),
     path('coordenador/excluir/<int:coordenador_id>/', views.excluir_coordenador, name='excluir_coordenador'),
+    path('hospitais/', views.listar_hospitais, name='listar_hospitais'),
     path('hospital/salvar/', views.salvar_hospital, name='cadastrar_hospital'),
     path('hospital/salvar/<int:hospital_id>/', views.salvar_hospital, name='editar_hospital'),
+    path('hospital/excluir/<int:hospital_id>/', views.excluir_hospital, name='excluir_hospital'),
 ]

@@ -4,7 +4,13 @@
 {% load crispy_forms_filters %}
 
 {% block content-home %}
-    <h1 class="title"> Coordenadores</h1>
+
+    <div class="d-flex justify-content-between">
+        <h1 class="title"> Coordenadores</h1>
+            <div class="d-flex align-items-center">
+                <button class="btn" onclick="window.location.href = '{% url 'gerenciamento:cadastrar_coordenador' %}'">Novo</button>
+            </div>
+    </div>
 
     <table class="table table-striped">
         <thead>

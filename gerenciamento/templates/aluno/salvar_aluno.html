@@ -18,11 +18,19 @@
         {% csrf_token %}
         {{ form|crispy }}
         <div class="d-flex justify-content-end">
-            <button id="btn-cadastro" class="btn d-none">{% if aluno_id %}Editar{% else %}Cadastrar{% endif %}</button>
+            <button id="btn-cadastro" class="btn">{% if aluno_id %}Editar{% else %}Cadastrar{% endif %}</button>
         </div>
     </form>
 
 {% endblock %}
 {% block javascript %}
     <script src="{% static 'js/geral.js' %}"></script>
+
+    <script>
+        let id = '{{ aluno_id }}';
+        if(id !== 'None'){
+            $('#btn-cadastro').addClass('d-none');
+            $("input, select").prop('disabled', true);
+        }
+    </script>
 {% endblock %}

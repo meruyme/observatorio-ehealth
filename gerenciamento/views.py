@@ -165,5 +165,28 @@ def salvar_hospital(request, hospital_id=None):
     if request.POST:
         if form.is_valid():
             hospital = form.save()
+            messages.success(request, 'Hospital salvo com sucesso!')
+            return redirect('gerenciamento:listar_hospitais')
 
     return render(request, 'hospital/salvar_hospital.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
+def listar_hospitais(request):
+    queryset = Hospital.objects.all().order_by('nome')
+    hospitais = paginar_registros(request, queryset, 10)
+    return render(request, 'hospital/listar_hospitais.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
+def excluir_hospital(request, hospital_id):
+    try:
+        hospital = Hospital.objects.get(pk=hospital_id)
+    except:
+        messages.error(request, 'Hospital não existe.')
+        return redirect('gerenciamento:listar_hospitais')
+    hospital.delete()
+    messages.success(request, 'Hospital excluído com sucesso!')
+    return redirect('gerenciamento:listar_hospitais')
