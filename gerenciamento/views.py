@@ -97,6 +97,22 @@ def salvar_aluno(request, aluno_id=None):
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)
 @transaction.atomic
+def excluir_aluno(request, aluno_id):
+    try:
+        aluno = Aluno.objects.get(pk=aluno_id)
+    except:
+        messages.error(request, 'Aluno não existe.')
+        return redirect('gerenciamento:home')
+    user = aluno.auth_user
+    aluno.ativo = False
+    user.is_active = False
+    aluno.save()
+    user.save()
+    return redirect('gerenciamento:home')
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
 def salvar_hospital(request, hospital_id=None):
     if hospital_id:
         try:

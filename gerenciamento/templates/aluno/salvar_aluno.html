@@ -9,7 +9,7 @@
         {% if aluno_id %}
             <div class="d-flex align-items-center">
                 <button id="btn-editar" class="btn mr-1">Editar</button>
-                <button class="btn ml-2">Excluir</button>
+                <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_aluno' aluno_id %}'">Excluir</button>
             </div>
         {% endif %}
     </div>
