@@ -7,7 +7,7 @@ from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.utils import paginar_registros
 from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm
-from pesquisa.models import Pesquisa, Pergunta
+from pesquisa.models import Pesquisa
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)
@@ -51,3 +51,16 @@ def salvar_pergunta(request):
             pergunta = form_pergunta.save()
             return JsonResponse({'id': pergunta.pk, 'titulo': pergunta.titulo})
     return JsonResponse({})
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+@transaction.atomic
+def excluir_pesquisa(request, pesquisa_id):
+    try:
+        pesquisa = Pesquisa.objects.get(pk=pesquisa_id)
+    except:
+        messages.error(request, 'Pesquisa não existe.')
+        return redirect('pesquisa:listar_pesquisas')
+    pesquisa.delete()
+    messages.success(request, 'Pesquisa excluído com sucesso!')
+    return redirect('pesquisa:listar_pesquisas')

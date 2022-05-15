@@ -8,14 +8,12 @@
             <h1 class="title"> {% if not pesquisa_id %}Cadastrar{% endif %} Pesquisa</h1>
                 <div class="d-flex align-items-center">
                     {% if not pesquisa_id %}
-                        <button id="btn-pergunta" class="btn mr-1">Nova pergunta</button>
+                        <button id="btn-pergunta" class="btn">Nova pergunta</button>
                     {% else %}
                         {% if request.user.coordenador == pesquisa.coordenador_responsavel %}
-                            <button id="btn-pergunta" class="btn mr-1">Nova pergunta</button>
-                            <button id="btn-editar" class="btn mr-1">Editar</button>
-                            {% comment %}
-                            <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
-                            {% endcomment %}
+                            <button id="btn-pergunta" class="btn">Nova pergunta</button>
+                            <button id="btn-editar" class="btn ml-2">Editar</button>
+                            <button class="btn ml-2" onclick="window.location.href = '{% url 'pesquisa:excluir_pesquisa' pesquisa_id %}'">Excluir</button>
                         {% endif %}
                     {% endif %}
                 </div>

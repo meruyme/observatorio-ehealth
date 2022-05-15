@@ -8,7 +8,7 @@
         <h1 class="title"> {% if not coordenador_id %}Cadastrar{% endif %} Coordenador</h1>
         {% if coordenador_id %}
             <div class="d-flex align-items-center">
-                <button id="btn-editar" class="btn mr-1">Editar</button>
+                <button id="btn-editar" class="btn">Editar</button>
                 <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_coordenador' coordenador_id %}'">Excluir</button>
             </div>
         {% endif %}
