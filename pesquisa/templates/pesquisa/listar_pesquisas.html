@@ -1,0 +1,52 @@
+{% extends "base-home.html" %}
+{% load bootstrap_pagination %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content-home %}
+    <div class="d-flex justify-content-between">
+        <h1 class="title"> Pesquisas</h1>
+            <div class="d-flex align-items-center">
+                <button class="btn" onclick="window.location.href = '{% url 'pesquisa:cadastrar_pesquisa' %}'">Novo</button>
+            </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Título</th>
+            <th scope="col">Coordenador responsável</th>
+            <th scope="col">Data de início</th>
+            <th scope="col">Data de fim</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pesquisa in pesquisas %}
+              <tr data-href="{% url 'pesquisa:editar_pesquisa' pesquisa.pk %}">
+                  <td>{{ pesquisa.titulo }}</td>
+                  <td>{{ pesquisa.coordenador_responsavel }}</td>
+                  <td>{{ pesquisa.data_inicio|date:"d/m/Y" }}</td>
+                  <td>{{ pesquisa.data_fim|date:"d/m/Y" }}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% bootstrap_paginate pesquisas range=5 show_prev_next="true" show_first_last="true" %}
+            </ul>
+        </nav>
+    </nav>
+
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(() =>{
+            $('*[data-href]').on('click', function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+{% endblock %}

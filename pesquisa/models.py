@@ -9,6 +9,7 @@ class Pesquisa(models.Model):
     data_fim = models.DateField(verbose_name='Data de fim')
     hospitais = models.ManyToManyField('gerenciamento.Hospital', through='HospitalPesquisa')
     perguntas = models.ManyToManyField('Pergunta', through='PerguntaPesquisa')
+    alunos = models.ManyToManyField('gerenciamento.Aluno', through='AlunoPesquisa')
 
     def __str__(self):
         return self.titulo

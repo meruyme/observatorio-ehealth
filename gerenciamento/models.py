@@ -81,7 +81,6 @@ class Aluno(models.Model):
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='aluno')
     coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos',
                                                 verbose_name="Coordenador responsável")
-    pesquisas = models.ManyToManyField('pesquisa.Pesquisa', through='pesquisa.AlunoPesquisa')
 
     def __str__(self):
         return self.nome

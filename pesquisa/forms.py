@@ -7,10 +7,11 @@ from pesquisa.models import Pesquisa
 class SalvarPesquisaForm(forms.ModelForm):
     class Meta:
         model = Pesquisa
-        fields = ['titulo', 'data_inicio', 'data_fim', 'hospitais', 'perguntas']
+        fields = ['titulo', 'data_inicio', 'data_fim', 'hospitais', 'perguntas', 'alunos']
         widgets = {
             'hospitais': Select2MultipleWidget,
             'perguntas': Select2MultipleWidget,
+            'alunos': Select2MultipleWidget,
             'data_inicio': forms.DateInput(
                 format='%Y-%m-%d', attrs={
                     "required": True,

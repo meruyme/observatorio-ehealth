@@ -7,12 +7,14 @@
         <div class="d-flex justify-content-between">
             <h1 class="title"> {% if not hospital_id %}Cadastrar{% endif %} Pesquisa</h1>
             {% if pesquisa_id %}
-                <div class="d-flex align-items-center">
-                    <button id="btn-editar" class="btn mr-1">Editar</button>
-                    {% comment %}
-                    <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
-                    {% endcomment %}
-                </div>
+                {% if request.user.coordenador == pesquisa.coordenador_responsavel %}
+                    <div class="d-flex align-items-center">
+                        <button id="btn-editar" class="btn mr-1">Editar</button>
+                        {% comment %}
+                        <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
+                        {% endcomment %}
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
 
