@@ -14,6 +14,15 @@ label{
     color: #53507A;
 }
 
+.modal-title{
+    color: #53507A;
+    font-weight: bold;
+}
+
+.modal-header{
+    background-color: #D3E7F7;
+}
+
 .home {
     margin: 0;
     display: flex;
