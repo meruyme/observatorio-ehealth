@@ -14,6 +14,11 @@
                 Pesquisas
             </button>
         {% endif %}
+        <button type="button" class="btn btn-primary btn-square-md ml-2"
+                onclick="window.location.href = '{% url 'pesquisa:listar_respostas' %}'">
+            <img class="mb-2" src="{% static 'images/icons/pesquisas.svg' %}">
+            Respostas
+        </button>
     </div>
 
 {% endblock %}

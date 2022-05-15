@@ -74,15 +74,14 @@ def excluir_pesquisa(request, pesquisa_id):
     return redirect('pesquisa:listar_pesquisas')
 
 
-@tipo_usuario_required(TipoUsuario.ALUNO)
+@login_required
 @transaction.atomic
 def salvar_resposta(request, pesquisa_id, resposta_id=None):
     resposta = None
-    aluno = request.user.aluno
+    aluno = None
     initial = {}
     try:
         pesquisa = Pesquisa.objects.get(pk=pesquisa_id)
-        aluno_pesquisa = AlunoPesquisa.objects.get(aluno=aluno, pesquisa=pesquisa)
     except:
         messages.error(request, 'Pesquisa não existe.')
         return redirect('pesquisa:listar_respostas')
@@ -104,6 +103,8 @@ def salvar_resposta(request, pesquisa_id, resposta_id=None):
                                     f"{pesquisa.data_inicio.strftime('%d/%m/%Y')} e "
                                     f"{pesquisa.data_fim.strftime('%d/%m/%Y')}.")
             return redirect('pesquisa:listar_respostas')
+    aluno = request.user.aluno if request.user.is_aluno else resposta.aluno_pesquisa.aluno
+    aluno_pesquisa = AlunoPesquisa.objects.get(aluno=aluno, pesquisa=pesquisa)
     form = SalvarRespostaForm(pesquisa, request, request.POST or None, initial=initial, resposta=resposta)
     if request.POST:
         if form.is_valid():

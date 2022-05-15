@@ -39,6 +39,7 @@ def perfil(request):
             user.save()
             if form_senha.cleaned_data.get('senha'):
                 form_senha.save()
+            messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('gerenciamento:perfil')
     return render(request, 'perfil.html', locals())
 
