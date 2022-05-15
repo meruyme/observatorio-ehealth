@@ -5,13 +5,19 @@
 {% block content-home %}
 
         <h1 class="title"> Importar Pesquisa</h1>
-
-    <form method="post" novalidate enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="d-flex justify-content-end">
-            <button id='btn-cadastro' class="btn">Importar</button>
+        <div class="w-50">
+            <button class="btn mb-4" onclick="window.location.href = '{% static 'files/importacao_exemplo.csv' %}'">
+                <img src="{% static 'images/icons/download.svg' %}">
+                Download do arquivo de exemplo
+            </button>
+            <form id="form-importar-pesquisa" method="post" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+            </form>
         </div>
-    </form>
+        <div class="d-flex justify-content-end">
+            <button id='btn-cadastro' class="btn" type="submit" form="form-importar_pesquisa">Importar</button>
+        </div>
+
 
 {% endblock %}
