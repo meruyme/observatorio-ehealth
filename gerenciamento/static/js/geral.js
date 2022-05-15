@@ -1,9 +1,5 @@
 let isEditable = false;
 
-$(".select").select2({
-    theme: "bootstrap4"
-});
-
 function restore() {
     $('form').find(':input').each(function(i, elem) {
         let input = $(elem);
