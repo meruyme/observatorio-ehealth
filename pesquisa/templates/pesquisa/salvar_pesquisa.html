@@ -53,6 +53,14 @@
             $("input, select").prop('disabled', true);
         }
 
+        let erros = '{{ form.errors }}';
+        if(erros){
+            $("input, select").prop('disabled', false);
+            $('#btn-editar').text('Desfazer alterações');
+            $('#btn-cadastro').removeClass('d-none');
+            isEditable = true;
+        }
+
         $('#btn-pergunta').on('click', function() {
             $('#modal-nova-pergunta').modal('show');
         });

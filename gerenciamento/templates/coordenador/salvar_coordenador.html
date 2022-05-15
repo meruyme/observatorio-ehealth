@@ -31,5 +31,13 @@
             $('#btn-cadastro').addClass('d-none');
             $("input, select").prop('disabled', true);
         }
+
+        let erros = '{{ form.errors }}';
+        if(erros){
+            $("input, select").prop('disabled', false);
+            $('#btn-editar').text('Desfazer alterações');
+            $('#btn-cadastro').removeClass('d-none');
+            isEditable = true;
+        }
     </script>
 {% endblock %}

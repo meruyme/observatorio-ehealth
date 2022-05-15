@@ -24,9 +24,17 @@ class SalvarPesquisaForm(forms.ModelForm):
                 }),
         }
 
+    def clean(self):
+        data_inicio = self.cleaned_data.get('data_inicio')
+        data_fim = self.cleaned_data.get('data_fim')
+
+        if data_inicio and data_fim and data_inicio > data_fim:
+            self.add_error('data_inicio', 'A data de início deve ser menor que a data final.')
+
+        return self.cleaned_data
+
 
 class SalvarPerguntaForm(forms.ModelForm):
-
     class Meta:
         model = Pergunta
         fields = ['titulo']

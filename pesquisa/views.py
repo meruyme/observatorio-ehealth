@@ -28,7 +28,7 @@ def salvar_pesquisa(request, pesquisa_id=None):
             pesquisa = form.save(commit=False)
             pesquisa.coordenador_responsavel = request.user.coordenador
             pesquisa.save()
-            pesquisa.save_m2m()
+            form.save_m2m()
             messages.success(request, 'Pesquisa salva com sucesso!')
             return redirect('pesquisa:listar_pesquisas')
 
