@@ -27,7 +27,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name="Email", unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False, verbose_name="Administrador")
-    tipo_usuario = models.CharField(max_length=2, choices=TipoUsuario.CHOICES)
+    tipo_usuario = models.CharField(max_length=2, choices=TipoUsuario.CHOICES, default=TipoUsuario.COORDENADOR)
 
     USERNAME_FIELD = "email"
 
