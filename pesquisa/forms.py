@@ -1,7 +1,8 @@
 from django import forms
 from django_select2.forms import Select2MultipleWidget
 
-from pesquisa.models import Pesquisa, Pergunta
+from gerenciamento.models import Hospital
+from pesquisa.models import Pesquisa, Pergunta, Resposta
 
 
 class SalvarPesquisaForm(forms.ModelForm):
@@ -46,3 +47,18 @@ class SalvarPerguntaForm(forms.ModelForm):
         widgets = {
             'titulo': forms.Textarea(attrs={'rows': 2})
         }
+
+
+class SalvarRespostaForm(forms.Form):
+    hospital = forms.ModelChoiceField(queryset=Hospital.objects.all(), required=True)
+
+    def __init__(self, pesquisa, request, *args, **kwargs):
+        super(SalvarRespostaForm, self).__init__(*args, **kwargs)
+        self.pesquisa = pesquisa
+        self.request = request
+        self.fields['hospital'].queryset = Hospital.objects.filter(hospitais_pesquisa__pesquisa=self.pesquisa)
+        for pergunta in self.pesquisa.perguntas.all():
+            self.fields[f'pergunta_{pergunta.pk}'] = forms.CharField(label=pergunta.titulo, required=True,
+                                                                     widget=forms.Textarea(attrs={'rows': 2}))
+
+

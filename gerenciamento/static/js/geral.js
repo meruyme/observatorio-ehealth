@@ -10,7 +10,7 @@ function restore() {
 
 $(document).ready(() => {
 
-    $('form').find(':input').each(function(i, elem) {
+    $('form').find(':input, select, textarea').each(function(i, elem) {
         let input = $(elem);
         input.data('initialState', input.val());
     });
@@ -18,13 +18,13 @@ $(document).ready(() => {
     $('#btn-editar').on('click', () => {
         if(isEditable){
             restore();
-            $("input, select").prop('disabled', true);
+            $("input, select, textarea").prop('disabled', true);
             $('#btn-editar').text('Editar');
             $('#btn-cadastro').addClass('d-none');
             isEditable = false;
         }
         else{
-            $("input, select").prop('disabled', false);
+            $("input, select, textarea").prop('disabled', false);
             $('#btn-editar').text('Desfazer alterações');
             $('#btn-cadastro').removeClass('d-none');
             isEditable = true;

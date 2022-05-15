@@ -1,0 +1,52 @@
+{% extends "base-home.html" %}
+{% load bootstrap_pagination %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content-home %}
+    <div class="d-flex justify-content-between">
+        <h1 class="title"> Respostas</h1>
+            <div class="d-flex align-items-center">
+                <button class="btn">Novo</button>
+            </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Pesquisa</th>
+            <th scope="col">Hospital</th>
+            <th scope="col">Coordenador responsável</th>
+            <th scope="col">Aluno</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for resposta in respostas %}
+              <tr data-href="{% url 'pesquisa:editar_resposta' resposta.aluno_pesquisa.pesquisa.pk resposta.pk %}">
+                  <td>{{ resposta.aluno_pesquisa.pesquisa.titulo }}</td>
+                  <td>{{ resposta.hospital_pesquisa.hospital }}</td>
+                  <td>{{ resposta.aluno_pesquisa.pesquisa.coordenador_responsavel }}</td>
+                  <td>{{ resposta.aluno_pesquisa.aluno }}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% bootstrap_paginate respostas range=5 show_prev_next="true" show_first_last="true" %}
+            </ul>
+        </nav>
+    </nav>
+
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(() =>{
+            $('*[data-href]').on('click', function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+{% endblock %}

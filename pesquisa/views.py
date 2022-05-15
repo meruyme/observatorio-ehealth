@@ -7,8 +7,8 @@ from django.shortcuts import render, redirect
 from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.utils import paginar_registros
-from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm
-from pesquisa.models import Pesquisa
+from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm, SalvarRespostaForm
+from pesquisa.models import Pesquisa, Resposta, AlunoPesquisa, HospitalPesquisa, PerguntaPesquisa, RespostaPergunta
 
 
 @login_required
@@ -70,3 +70,75 @@ def excluir_pesquisa(request, pesquisa_id):
     pesquisa.delete()
     messages.success(request, 'Pesquisa excluído com sucesso!')
     return redirect('pesquisa:listar_pesquisas')
+
+
+@tipo_usuario_required(TipoUsuario.ALUNO)
+@transaction.atomic
+def salvar_resposta(request, pesquisa_id, resposta_id=None):
+    resposta = None
+    aluno = request.user.aluno
+    initial = {}
+    try:
+        pesquisa = Pesquisa.objects.get(pk=pesquisa_id)
+        aluno_pesquisa = AlunoPesquisa.objects.get(aluno=aluno, pesquisa=pesquisa)
+    except:
+        messages.error(request, 'Pesquisa não existe.')
+        return redirect('pesquisa:listar_respostas')
+    if resposta_id:
+        try:
+            resposta = Resposta.objects.get(pk=resposta_id)
+            initial = {
+                'hospital': resposta.hospital_pesquisa.hospital,
+            }
+            for resultado in RespostaPergunta.objects.filter(resposta=resposta):
+                initial[f'pergunta_{resultado.pergunta_pesquisa.pergunta_id}'] = resultado.resultado
+        except:
+            messages.error(request, 'Resposta não existe.')
+            return redirect('pesquisa:listar_respostas')
+    form = SalvarRespostaForm(pesquisa, request, request.POST or None, initial=initial)
+    if request.POST:
+        if form.is_valid():
+            hospital = form.cleaned_data.get('hospital')
+            hospital_pesquisa = HospitalPesquisa.objects.get(hospital=hospital, pesquisa=pesquisa)
+            respostas = {}
+            for key, value in form.cleaned_data.items():
+                if 'pergunta_' in key:
+                    id_pergunta = int(key.replace('pergunta_', ''))
+                    id_pergunta_pesquisa = PerguntaPesquisa.objects.get(pergunta_id=id_pergunta, pesquisa=pesquisa).pk
+                    respostas[id_pergunta_pesquisa] = value
+            if resposta:
+                resposta.hospital_pesquisa = hospital_pesquisa
+                resposta.save()
+                RespostaPergunta.objects.filter(resposta=resposta).delete()
+            else:
+                resposta = Resposta.objects.create(hospital_pesquisa=hospital_pesquisa, aluno_pesquisa=aluno_pesquisa)
+            for pergunta_pesquisa_id, resultado in respostas.items():
+                RespostaPergunta.objects.create(resposta=resposta, pergunta_pesquisa_id=pergunta_pesquisa_id,
+                                                resultado=resultado)
+            messages.success(request, 'Resposta salva com sucesso!')
+            return redirect('pesquisa:listar_respostas')
+    return render(request, 'resposta/salvar_resposta.html', locals())
+
+
+@login_required
+@transaction.atomic
+def listar_respostas(request):
+    queryset = Resposta.objects.all()
+    if request.user.tipo_usuario == TipoUsuario.ALUNO:
+        queryset = queryset.filter(aluno_pesquisa__aluno=request.user.aluno)
+    queryset = queryset.order_by('hospital_pesquisa__hospital__nome', 'aluno_pesquisa__aluno__nome')
+    respostas = paginar_registros(request, queryset, 10)
+    return render(request, 'resposta/listar_respostas.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.ALUNO)
+@transaction.atomic
+def excluir_resposta(request, resposta_id):
+    try:
+        resposta = Resposta.objects.get(pk=resposta_id)
+    except:
+        messages.error(request, 'Resposta não existe.')
+        return redirect('pesquisa:listar_respostas')
+    resposta.delete()
+    messages.success(request, 'Resposta excluída com sucesso!')
+    return redirect('pesquisa:listar_respostas')
