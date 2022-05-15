@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.db import transaction
+from django.http import JsonResponse, QueryDict
 from django.shortcuts import render, redirect
 
 from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.utils import paginar_registros
-from pesquisa.forms import SalvarPesquisaForm
-from pesquisa.models import Pesquisa
+from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm
+from pesquisa.models import Pesquisa, Pergunta
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)
@@ -21,6 +22,7 @@ def salvar_pesquisa(request, pesquisa_id=None):
             return redirect('pesquisa:listar_pesquisas')
     else:
         form = SalvarPesquisaForm(request.POST or None)
+    form_pergunta = SalvarPerguntaForm()
     if request.POST:
         if form.is_valid():
             pesquisa = form.save(commit=False)
@@ -39,3 +41,12 @@ def listar_pesquisas(request):
     queryset = Pesquisa.objects.all().order_by('data_inicio', 'titulo')
     pesquisas = paginar_registros(request, queryset, 10)
     return render(request, 'pesquisa/listar_pesquisas.html', locals())
+
+
+def salvar_pergunta(request):
+    if request.is_ajax():
+        form_pergunta = SalvarPerguntaForm(QueryDict(request.POST.get('form')).dict())
+        if form_pergunta.is_valid():
+            pergunta = form_pergunta.save()
+            return JsonResponse({'id': pergunta.pk, 'titulo': pergunta.titulo})
+    return JsonResponse({})

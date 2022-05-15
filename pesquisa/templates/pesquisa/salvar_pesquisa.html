@@ -5,17 +5,20 @@
 {% block content-home %}
 
         <div class="d-flex justify-content-between">
-            <h1 class="title"> {% if not hospital_id %}Cadastrar{% endif %} Pesquisa</h1>
-            {% if pesquisa_id %}
-                {% if request.user.coordenador == pesquisa.coordenador_responsavel %}
-                    <div class="d-flex align-items-center">
-                        <button id="btn-editar" class="btn mr-1">Editar</button>
-                        {% comment %}
-                        <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
-                        {% endcomment %}
-                    </div>
-                {% endif %}
-            {% endif %}
+            <h1 class="title"> {% if not pesquisa_id %}Cadastrar{% endif %} Pesquisa</h1>
+                <div class="d-flex align-items-center">
+                    {% if not pesquisa_id %}
+                        <button id="btn-pergunta" class="btn mr-1">Nova pergunta</button>
+                    {% else %}
+                        {% if request.user.coordenador == pesquisa.coordenador_responsavel %}
+                            <button id="btn-pergunta" class="btn mr-1">Nova pergunta</button>
+                            <button id="btn-editar" class="btn mr-1">Editar</button>
+                            {% comment %}
+                            <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
+                            {% endcomment %}
+                        {% endif %}
+                    {% endif %}
+                </div>
         </div>
 
     <form method="post" novalidate>
@@ -27,6 +30,20 @@
     </form>
 
 {% endblock %}
+
+{% block id-modal %}modal-nova-pergunta{% endblock %}
+{% block modal-title %}Nova pergunta{% endblock %}
+{% block modal-content %}
+    <form id="form-pergunta" method="post">
+        {% csrf_token %}
+        {{ form_pergunta|crispy }}
+    </form>
+{% endblock %}
+{% block modal-footer %}
+    <button id="btn-salvar-pergunta" type="submit" form="form-pergunta" class="btn btn-primary">Salvar</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+{% endblock %}
+
 {% block javascript %}
     <script src="{% static 'js/geral.js' %}"></script>
     <script>
@@ -35,6 +52,30 @@
             $('#btn-cadastro').addClass('d-none');
             $("input, select").prop('disabled', true);
         }
+
+        $('#btn-pergunta').on('click', function() {
+            $('#modal-nova-pergunta').modal('show');
+        });
+
+        $('#form-pergunta').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'pesquisa:salvar_pergunta' %}",
+                data:  {form: $('#form-pergunta').serialize(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        },
+                success: function (data){
+                        $('#id_perguntas').append($('<option>', {
+                            value: data['id'],
+                            text: data['titulo']
+                        }));
+                        $('#form-pergunta').trigger('reset');
+                        $('#modal-nova-pergunta').modal('hide');
+                    }
+                });
+        })
+
     </script>
     {{ form.media.js }}
 {% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 from django_select2.forms import Select2MultipleWidget
 
-from pesquisa.models import Pesquisa
+from pesquisa.models import Pesquisa, Pergunta
 
 
 class SalvarPesquisaForm(forms.ModelForm):
@@ -22,4 +22,19 @@ class SalvarPesquisaForm(forms.ModelForm):
                     "required": True,
                     "type": "date"
                 }),
+        }
+
+
+class SalvarPerguntaForm(forms.ModelForm):
+
+    class Meta:
+        model = Pergunta
+        fields = ['titulo']
+
+        labels = {
+            'titulo': 'Pergunta'
+        }
+
+        widgets = {
+            'titulo': forms.Textarea(attrs={'rows': 2})
         }
