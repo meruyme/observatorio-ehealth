@@ -8,10 +8,12 @@
             <h1 class="title" style="margin-bottom: 10px !important"> {% if not resposta_id %}Cadastrar{% endif %} Resposta</h1>
             {% if resposta_id %}
                 <div class="d-flex align-items-center">
-                    <button id="btn-editar" class="btn">Editar</button>
-                    {% comment %}
-                    <button class="btn ml-2" onclick="window.location.href = '{% url 'gerenciamento:excluir_hospital' hospital_id %}'">Excluir</button>
-                    {% endcomment %}
+                    {% if request.user.is_aluno %}
+                         {% if request.user.aluno == resposta.aluno_pesquisa.aluno %}
+                             <button id="btn-editar" class="btn">Editar</button>
+                             <button class="btn ml-2" onclick="window.location.href = '{% url 'pesquisa:excluir_resposta' resposta_id %}'">Excluir</button>
+                        {% endif %}
+                    {% endif %}
                 </div>
             {% endif %}
         </div>

@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from gerenciamento.choices import TipoUsuario
 from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.utils import paginar_registros
-from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm, SalvarRespostaForm
+from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm, SalvarRespostaForm, SelecionarPesquisaForm
 from pesquisa.models import Pesquisa, Resposta, AlunoPesquisa, HospitalPesquisa, PerguntaPesquisa, RespostaPergunta
 
 
@@ -104,7 +104,7 @@ def salvar_resposta(request, pesquisa_id, resposta_id=None):
                                     f"{pesquisa.data_inicio.strftime('%d/%m/%Y')} e "
                                     f"{pesquisa.data_fim.strftime('%d/%m/%Y')}.")
             return redirect('pesquisa:listar_respostas')
-    form = SalvarRespostaForm(pesquisa, request, request.POST or None, initial=initial)
+    form = SalvarRespostaForm(pesquisa, request, request.POST or None, initial=initial, resposta=resposta)
     if request.POST:
         if form.is_valid():
             hospital = form.cleaned_data.get('hospital')
@@ -133,10 +133,15 @@ def salvar_resposta(request, pesquisa_id, resposta_id=None):
 @transaction.atomic
 def listar_respostas(request):
     queryset = Resposta.objects.all()
-    if request.user.tipo_usuario == TipoUsuario.ALUNO:
+    form = SelecionarPesquisaForm(request, request.POST or None)
+    if request.user.is_aluno:
         queryset = queryset.filter(aluno_pesquisa__aluno=request.user.aluno)
     queryset = queryset.order_by('hospital_pesquisa__hospital__nome', 'aluno_pesquisa__aluno__nome')
     respostas = paginar_registros(request, queryset, 10)
+    if request.POST:
+        if form.is_valid():
+            pesquisa = form.cleaned_data.get('pesquisa')
+            return redirect('pesquisa:cadastrar_resposta', pesquisa_id=pesquisa.pk)
     return render(request, 'resposta/listar_respostas.html', locals())
 
 

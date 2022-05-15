@@ -7,7 +7,9 @@
     <div class="d-flex justify-content-between">
         <h1 class="title"> Respostas</h1>
             <div class="d-flex align-items-center">
-                <button class="btn">Novo</button>
+                {% if request.user.is_aluno %}
+                    <button class="btn" id="btn-nova-resposta">Novo</button>
+                {% endif %}
             </div>
     </div>
 
@@ -41,12 +43,30 @@
     </nav>
 
 {% endblock %}
+
+{% block id-modal %}modal-selecionar-pesquisa{% endblock %}
+{% block modal-title %}Selecionar pesquisa{% endblock %}
+{% block modal-content %}
+    <form id="form-selecionar-pesquisa" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+    </form>
+{% endblock %}
+{% block modal-footer %}
+    <button id="btn-selecionar-pesquisa" type="submit" form="form-selecionar-pesquisa" class="btn btn-primary">Selecionar</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+{% endblock %}
+
 {% block javascript %}
     <script>
         $(document).ready(() =>{
             $('*[data-href]').on('click', function() {
                 window.location = $(this).data("href");
             });
+        });
+
+        $('#btn-nova-resposta').on('click', function() {
+            $('#modal-selecionar-pesquisa').modal('show');
         });
     </script>
 {% endblock %}
