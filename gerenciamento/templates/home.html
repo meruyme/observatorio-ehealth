@@ -3,6 +3,37 @@
 
 {% block content-home %}
 
-    Teste
+    <h1 class="title"> Gráficos</h1>
+        <canvas class="chart" id="hospital-grafico"></canvas>
+{% endblock %}
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+    let config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ data|safe }},
+          backgroundColor: [
+            '#757294', '#646187', '#53507A'
+          ],
+          label: 'Tipo de Organização'
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+          responsive: true,
+          title: {
+              display: true,
+              text: 'Quantidade de hospitais por tipo de organização',
+          }
+      }
+    };
 
+    window.onload = function() {
+      let ctx = document.getElementById('hospital-grafico').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
 {% endblock %}

@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Count
 from django.shortcuts import render, redirect
 
 from gerenciamento.forms import SalvarAlunoForm, SalvarHospitalForm, SalvarCoordenadorForm, RedefinirSenhaForm
 from django.contrib.auth import get_user_model
 
-from gerenciamento.choices import TipoUsuario
+from gerenciamento.choices import TipoUsuario, TipoOrganizacao
 from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.models import Aluno, Hospital, Coordenador
 from gerenciamento.utils import paginar_registros
@@ -15,6 +16,12 @@ User = get_user_model()
 
 
 def home(request):
+    labels = []
+    data = []
+    hospitais = Hospital.objects.all().values('tipo_organizacao').annotate(qtd=Count('pk'))
+    for hospital in hospitais:
+        labels.append(dict(TipoOrganizacao.CHOICES)[hospital['tipo_organizacao']])
+        data.append(hospital['qtd'])
     return render(request, 'home.html', locals())
 
 
