@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -94,6 +96,13 @@ def salvar_resposta(request, pesquisa_id, resposta_id=None):
                 initial[f'pergunta_{resultado.pergunta_pesquisa.pergunta_id}'] = resultado.resultado
         except:
             messages.error(request, 'Resposta não existe.')
+            return redirect('pesquisa:listar_respostas')
+    else:
+        hoje = date.today()
+        if pesquisa.data_inicio > hoje or pesquisa.data_fim < hoje:
+            messages.error(request, f"O tempo de coleta dessa pesquisa é entre "
+                                    f"{pesquisa.data_inicio.strftime('%d/%m/%Y')} e "
+                                    f"{pesquisa.data_fim.strftime('%d/%m/%Y')}.")
             return redirect('pesquisa:listar_respostas')
     form = SalvarRespostaForm(pesquisa, request, request.POST or None, initial=initial)
     if request.POST:
