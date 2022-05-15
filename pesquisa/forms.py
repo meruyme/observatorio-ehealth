@@ -1,7 +1,6 @@
 from django import forms
 from django_select2.forms import Select2MultipleWidget
 
-from gerenciamento.choices import TipoUsuario
 from gerenciamento.models import Hospital
 from pesquisa.models import Pesquisa, Pergunta, Resposta, AlunoPesquisa, HospitalPesquisa
 
@@ -85,3 +84,6 @@ class SelecionarPesquisaForm(forms.Form):
             self.fields['pesquisa'].queryset = Pesquisa.objects.filter(alunos=request.user.aluno)
 
 
+class ImportarPesquisaForm(forms.Form):
+    arquivo = forms.FileField(required=True, help_text='O arquivo só será aceito se estiver no formato '
+                                                       'do arquivo de exemplo.')

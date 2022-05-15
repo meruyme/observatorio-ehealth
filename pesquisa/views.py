@@ -1,4 +1,6 @@
-from datetime import date
+import csv
+import traceback
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,16 +8,102 @@ from django.db import transaction
 from django.http import JsonResponse, QueryDict
 from django.shortcuts import render, redirect
 
-from gerenciamento.choices import TipoUsuario
+from gerenciamento.choices import TipoUsuario, TipoLocal, TipoOrganizacao
 from gerenciamento.decorators import tipo_usuario_required
-from gerenciamento.utils import paginar_registros
-from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm, SalvarRespostaForm, SelecionarPesquisaForm
-from pesquisa.models import Pesquisa, Resposta, AlunoPesquisa, HospitalPesquisa, PerguntaPesquisa, RespostaPergunta
+from gerenciamento.models import Aluno, Hospital, Pais
+from gerenciamento.utils import paginar_registros, decode_utf8, get_id
+from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm, SalvarRespostaForm, SelecionarPesquisaForm, \
+    ImportarPesquisaForm
+from pesquisa.models import Pesquisa, Resposta, AlunoPesquisa, HospitalPesquisa, PerguntaPesquisa, RespostaPergunta, \
+    Pergunta
 
 
 @login_required
 def pesquisa_acoes(request):
     return render(request, 'pesquisa.html', locals())
+
+
+@tipo_usuario_required(TipoUsuario.COORDENADOR)
+def importar_pesquisa(request):
+    form = ImportarPesquisaForm(request.POST or None, request.FILES or None)
+    if request.POST:
+        if form.is_valid():
+            header_inicial = {
+                'titulo': 0, 'data_inicio': 1, 'data_fim': 2, 'matricula': 3
+            }
+            header = {
+                'hospital': 0, 'pais': 1, 'estado': 2, 'cidade': 3, 'tipo_local': 4,
+                'tipo_organizacao': 5
+            }
+            perguntas_pesquisa = []
+            try:
+                with transaction.atomic():
+                    arquivo = decode_utf8(form.cleaned_data.get('arquivo'))
+                    df = csv.reader(arquivo, delimiter=";")
+                    next(df)
+                    linha_pesquisa = next(df)
+                    aluno = Aluno.objects.filter(ativo=True, matricula=linha_pesquisa[header_inicial['matricula']])\
+                        .first()
+                    if not aluno:
+                        raise Exception('O aluno informado não está cadastrado no sistema.')
+                    data_inicio = datetime.strptime(linha_pesquisa[header_inicial['data_inicio']], '%d/%m/%Y')
+                    data_fim = datetime.strptime(linha_pesquisa[header_inicial['data_fim']], '%d/%m/%Y')
+                    pesquisa = Pesquisa.objects.filter(titulo=linha_pesquisa[header_inicial['titulo']],
+                                                       data_inicio=data_inicio, data_fim=data_fim,
+                                                       coordenador_responsavel=request.user.coordenador).first()
+                    if not pesquisa:
+                        pesquisa = Pesquisa.objects.create(titulo=linha_pesquisa[header_inicial['titulo']],
+                                                           data_inicio=data_inicio, data_fim=data_fim,
+                                                           coordenador_responsavel=request.user.coordenador)
+                    aluno_pesquisa = AlunoPesquisa.objects.filter(pesquisa=pesquisa, aluno=aluno).first()
+                    if not aluno_pesquisa:
+                        aluno_pesquisa = AlunoPesquisa.objects.create(pesquisa=pesquisa, aluno=aluno)
+                    next(df)
+                    linha_perguntas = next(df)
+                    perguntas = linha_perguntas[6:]
+                    for nome_pergunta in perguntas:
+                        pergunta = Pergunta.objects.filter(titulo=nome_pergunta).first()
+                        if not pergunta:
+                            pergunta = Pergunta.objects.create(titulo=nome_pergunta)
+                        pergunta_pesquisa = PerguntaPesquisa.objects.filter(pesquisa=pesquisa, pergunta=pergunta)\
+                            .first()
+                        if not pergunta_pesquisa:
+                            pergunta_pesquisa = PerguntaPesquisa.objects.create(pesquisa=pesquisa, pergunta=pergunta)
+                        perguntas_pesquisa.append(pergunta_pesquisa.pk)
+                    for row in df:
+                        pais = Pais.objects.get(nome=row[header['pais']])
+                        tipo_local = get_id(TipoLocal, row[header['tipo_local']])
+                        tipo_organizacao = get_id(TipoOrganizacao, row[header['tipo_organizacao']])
+                        hospital = Hospital.objects.filter(pais=pais, nome=row[header['hospital']],
+                                                           estado=row[header['estado']], cidade=row[header['cidade']],
+                                                           tipo_local=tipo_local, tipo_organizacao=tipo_organizacao
+                                                           ).first()
+                        if not hospital:
+                            hospital = Hospital.objects.create(pais=pais, nome=row[header['hospital']],
+                                                               estado=row[header['estado']],
+                                                               cidade=row[header['cidade']],
+                                                               tipo_local=tipo_local, tipo_organizacao=tipo_organizacao)
+                        hospital_pesquisa = HospitalPesquisa.objects.filter(hospital=hospital, pesquisa=pesquisa)\
+                            .first()
+                        if not hospital_pesquisa:
+                            hospital_pesquisa = HospitalPesquisa.objects.create(hospital=hospital, pesquisa=pesquisa)
+                        resposta = Resposta.objects.create(aluno_pesquisa=aluno_pesquisa,
+                                                           hospital_pesquisa=hospital_pesquisa)
+                        for index, value in enumerate(perguntas_pesquisa):
+                            resultado = row[6 + index]
+                            RespostaPergunta.objects.create(pergunta_pesquisa_id=value, resposta=resposta,
+                                                            resultado=resultado)
+                    messages.success(request, 'Importação realizada com sucesso!')
+                    return redirect('pesquisa:listar_pesquisas')
+            except Exception as e:
+                if hasattr(e, 'message'):
+                    mensagem = e.message
+                else:
+                    mensagem = e
+                print(traceback.format_exc())
+                messages.error(request, 'Ocorreu um erro durante a importação. Detalhes do erro: ' + str(mensagem))
+                return redirect('pesquisa:importar_pesquisa')
+    return render(request, 'pesquisa/importar_pesquisa.html', locals())
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)

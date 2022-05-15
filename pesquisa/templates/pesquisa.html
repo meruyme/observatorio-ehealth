@@ -13,10 +13,15 @@
                 <img class="mb-2" src="{% static 'images/icons/pesquisas.svg' %}">
                 Pesquisas
             </button>
+            <button type="button" class="btn btn-primary btn-square-md ml-2"
+                    onclick="window.location.href = '{% url 'pesquisa:importar_pesquisa' %}'">
+                <img class="mb-2" src="{% static 'images/icons/importacao.svg' %}">
+                Importar pesquisa
+            </button>
         {% endif %}
         <button type="button" class="btn btn-primary btn-square-md ml-2"
                 onclick="window.location.href = '{% url 'pesquisa:listar_respostas' %}'">
-            <img class="mb-2" src="{% static 'images/icons/pesquisas.svg' %}">
+            <img class="mb-2" src="{% static 'images/icons/respostas.svg' %}">
             Respostas
         </button>
     </div>
