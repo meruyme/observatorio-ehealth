@@ -26,7 +26,8 @@ def salvar_pesquisa(request, pesquisa_id=None):
     if request.POST:
         if form.is_valid():
             pesquisa = form.save(commit=False)
-            pesquisa.coordenador_responsavel = request.user.coordenador
+            if not pesquisa_id:
+                pesquisa.coordenador_responsavel = request.user.coordenador
             pesquisa.save()
             form.save_m2m()
             messages.success(request, 'Pesquisa salva com sucesso!')
