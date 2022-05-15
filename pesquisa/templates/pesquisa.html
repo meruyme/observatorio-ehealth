@@ -1,0 +1,19 @@
+{% extends "base-home.html" %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content-home %}
+
+    <h1 class="title"> Ações</h1>
+
+    <div>
+        {% if user.is_coordenador %}
+            <button type="button" class="btn btn-primary btn-square-md"
+                    onclick="window.location.href = '{% url 'pesquisa:listar_pesquisas' %}'">
+                <img class="mb-2" src="{% static 'images/icons/pesquisas.svg' %}">
+                Pesquisas
+            </button>
+        {% endif %}
+    </div>
+
+{% endblock %}

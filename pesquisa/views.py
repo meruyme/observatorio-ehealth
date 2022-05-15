@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse, QueryDict
 from django.shortcuts import render, redirect
@@ -8,6 +9,11 @@ from gerenciamento.decorators import tipo_usuario_required
 from gerenciamento.utils import paginar_registros
 from pesquisa.forms import SalvarPesquisaForm, SalvarPerguntaForm
 from pesquisa.models import Pesquisa
+
+
+@login_required
+def pesquisa_acoes(request):
+    return render(request, 'pesquisa.html', locals())
 
 
 @tipo_usuario_required(TipoUsuario.COORDENADOR)
