@@ -22,13 +22,37 @@ class SalvarAlunoForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        instance = self.instance
-        users = User.objects.filter(email=email)
-        if instance:
-            users = users.exclude(pk=instance.auth_user.pk)
-        if users.exists():
-            self.add_error('email', 'E-mail já está em uso.')
+        if email:
+            instance = self.instance
+            users = User.objects.filter(email=email)
+            if instance.pk:
+                users = users.exclude(pk=instance.auth_user.pk)
+            if users.exists():
+                self.add_error('email', 'E-mail já está em uso.')
         return email
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get('cpf')
+        if cpf:
+            cpf = cpf.replace('.', '').replace('-', '')
+            instance = self.instance
+            alunos = Aluno.objects.filter(ativo=True, cpf=cpf)
+            if instance.pk:
+                alunos = alunos.exclude(pk=instance.pk)
+            if alunos.exists():
+                self.add_error('cpf', 'Aluno com esse CPF já existe.')
+        return cpf
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data.get('matricula')
+        if matricula:
+            instance = self.instance
+            alunos = Aluno.objects.filter(ativo=True, matricula=matricula)
+            if instance.pk:
+                alunos = alunos.exclude(pk=instance.pk)
+            if alunos.exists():
+                self.add_error('cpf', 'Aluno com essa matrícula já existe.')
+        return matricula
 
     def __init__(self, *args, **kwargs):
         aluno = kwargs.get('instance')
@@ -53,13 +77,26 @@ class SalvarCoordenadorForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        instance = self.instance
-        users = User.objects.filter(email=email)
-        if instance:
-            users = users.exclude(pk=instance.auth_user.pk)
-        if users.exists():
-            self.add_error('email', 'E-mail já está em uso.')
+        if email:
+            instance = self.instance
+            users = User.objects.filter(email=email)
+            if instance.pk:
+                users = users.exclude(pk=instance.auth_user.pk)
+            if users.exists():
+                self.add_error('email', 'E-mail já está em uso.')
         return email
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get('cpf')
+        if cpf:
+            cpf = cpf.replace('.', '').replace('-', '')
+            instance = self.instance
+            coordenadores = Coordenador.objects.filter(ativo=True, cpf=cpf)
+            if instance.pk:
+                coordenadores = coordenadores.exclude(pk=instance.pk)
+            if coordenadores.exists():
+                self.add_error('cpf', 'Coordenador com esse CPF já existe.')
+        return cpf
 
     def __init__(self, *args, **kwargs):
         coordenador = kwargs.get('instance')

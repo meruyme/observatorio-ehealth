@@ -32,10 +32,16 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"
+        integrity="sha512-6Jym48dWwVjfmvB0Hu3/4jn4TODd6uvkxdi9GNbBHwZ4nGcRxJUCaTkL3pVY6XUQABqFo3T58EMXFQztbjvAFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(".select").select2({
         theme: "bootstrap4"
     });
+    $('#id_cpf').inputmask({mask: '999.999.999-99', autoUnmask: true, placeholder: ""})
+    $('#id_telefone').inputmask({mask: '(99) 99999-9999', placeholder: ""})
 </script>
 {% block javascript %}{% endblock %}
 </body>

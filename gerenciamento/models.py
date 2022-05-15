@@ -61,9 +61,9 @@ class User(AbstractBaseUser):
 
 class Coordenador(models.Model):
     nome = models.CharField(max_length=255)
-    cpf = BRCPFField(verbose_name='CPF', unique=True)
+    cpf = BRCPFField(verbose_name='CPF')
     data_nascimento = models.DateField(verbose_name="Data de nascimento")
-    telefone = models.CharField(max_length=13, null=True, blank=True)
+    telefone = models.CharField(max_length=20, null=True, blank=True)
     ativo = models.BooleanField(default=True)
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coordenador')
 
@@ -73,10 +73,10 @@ class Coordenador(models.Model):
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=255)
-    matricula = models.CharField(verbose_name="Matrícula", max_length=13, unique=True)
-    cpf = BRCPFField(verbose_name='CPF', unique=True)
+    matricula = models.CharField(verbose_name="Matrícula", max_length=13)
+    cpf = BRCPFField(verbose_name='CPF')
     data_nascimento = models.DateField(verbose_name="Data de nascimento")
-    telefone = models.CharField(max_length=13, null=True, blank=True)
+    telefone = models.CharField(max_length=20, null=True, blank=True)
     ativo = models.BooleanField(default=True)
     auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='aluno')
     coordenador_responsavel = models.ForeignKey(Coordenador, on_delete=models.PROTECT, related_name='alunos',
